@@ -9,7 +9,7 @@ timeFrame = 0 # time frame; default = 0
 shapes = [] # 2D Array for shape labels
 
 
-isSimulationStarted = True  # Status on whether the 2D CA Game of Life simulation has started or not
+isSimulationStarted = False  # Status on whether the 2D CA Game of Life simulation has started or not
 
 
 ROW = 25
@@ -56,18 +56,22 @@ def incrementTimeFrame():
     timeFrameLabelVariable.set(timeFrame)
 
 
+def toggleStartButton():
+    global isSimulationStarted
+    isSimulationStarted = True
+    startButton.config(state=DISABLED)
+    stopButton.config(state=NORMAL)
 
 def toggleStopButton():
     global isSimulationStarted
     global stateArray
 
-    if(isSimulationStarted):
-        stopButton.config(state=NORMAL)
-        stateArray = [[0] * 47 for _ in range(25)]
-        isSimulationStarted = False
-        updateSimulationScreen()
-    else:
-        stopButton.config(state=DISABLED)
+    stopButton.config(state=DISABLED)
+    startButton.config(state=NORMAL)
+    stateArray = [[0] * 47 for _ in range(25)]
+    isSimulationStarted = False
+    updateSimulationScreen()
+
 
 
 
@@ -131,7 +135,8 @@ startButton = Button(navFrame,
                      bg='#111111',
                     activeforeground='#ffffff',
                     activebackground='#3c3c3c',
-                    padx=25)
+                    padx=25,
+                    command=toggleStartButton)
 
 startButton.grid(row=0, column=0, padx=(0, 10))
 
