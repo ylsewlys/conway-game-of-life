@@ -94,7 +94,7 @@ startButton = Button(navFrame,
                     activebackground='#3c3c3c',
                     padx=25)
 
-startButton.grid(row=0, column=0)
+startButton.grid(row=0, column=0, padx=(0, 10))
 
 exitButton = Button(navFrame,
                 text='Exit',
@@ -105,6 +105,6 @@ exitButton = Button(navFrame,
                 activeforeground='#ff5252',
                 activebackground='#3c3c3c',
                 padx=25)
-exitButton.grid(row=0, column=1)
+exitButton.grid(row=0, column=1, padx=(10, 0))
 
 mainWindow.mainloop()
