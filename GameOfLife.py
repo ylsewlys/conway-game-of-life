@@ -3,9 +3,14 @@ from tkinter import colorchooser
 
 
 stateArray = [[0] * 47 for _ in range(25)] # 2D Cell Array
+
 timeFrame = 0 # time frame; default = 0
 
-isSimulationStarted = False # Status on whether the 2D CA Game of Life simulation has started or not
+shapes = [] # 2D Array for shape labels
+
+
+isSimulationStarted = True  # Status on whether the 2D CA Game of Life simulation has started or not
+
 
 ROW = 25
 COL = 47
@@ -29,15 +34,41 @@ def handleState(event):
 
     print(f"Clicked shape at row={row}, column={col}. Value: " + str(stateArray[row][col]))
 
-    
 
-    # Get the row and column of the clicked 
+def updateSimulationScreen():
+    for row in range(ROW):
+        for col in range(COL):
+            if(stateArray[row][col] == 1):
+                shapes[row][col].configure(bg='#ffffff')
+            else:
+                shapes[row][col].configure(bg='#111111')
+
 
 def isCellOnEdge(row, col):
     if(row == 0 or row == ROW - 1 or col == 0 or col == COL - 1):
         return True
     else:
         return False
+
+def incrementTimeFrame():
+    global timeFrame
+    timeFrame = timeFrame + 1
+    timeFrameLabelVariable.set(timeFrame)
+
+
+
+def toggleStopButton():
+    global isSimulationStarted
+    global stateArray
+
+    if(isSimulationStarted):
+        stopButton.config(state=NORMAL)
+        stateArray = [[0] * 47 for _ in range(25)]
+        isSimulationStarted = False
+        updateSimulationScreen()
+    else:
+        stopButton.config(state=DISABLED)
+
 
 
 
@@ -56,6 +87,9 @@ mainWindow.config(
     background="#111111"
 )
 
+# Initialize time frame label
+timeFrameLabelVariable = IntVar()
+timeFrameLabelVariable.set(timeFrame)
 
 # Create title
 titleLabel = Label(mainWindow, 
@@ -71,6 +105,7 @@ screenFrame.grid_propagate(False)
 screenFrame.pack()
 
 for row in range(ROW):
+    row_shapes = []
     for col in range(COL):
         if(stateArray[row][col] == 0):
             shape = Label(screenFrame, bg='#111111', width=1, height=1, highlightthickness=1, highlightcolor='#ffffff', highlightbackground='#ffffff')
@@ -79,9 +114,13 @@ for row in range(ROW):
 
         shape.bind("<Button-1>", handleState)
         shape.grid(row=row, column=col)
+        row_shapes.append(shape)
+
+    shapes.append(row_shapes)
 
 
-navFrame = Frame(mainWindow, bg='pink')
+
+navFrame = Frame(mainWindow, bg='#111111')
 navFrame.place(relx=0.5, anchor=CENTER, y=700)
 
 
@@ -96,6 +135,19 @@ startButton = Button(navFrame,
 
 startButton.grid(row=0, column=0, padx=(0, 10))
 
+stopButton = Button(navFrame,
+                     text="Stop",
+                     font=('Cascadia Code SemiLight', 18),
+                     fg='#ffffff',
+                     bg='#111111',
+                    activeforeground='#ffffff',
+                    activebackground='#3c3c3c',
+                    padx=25,
+                    command=toggleStopButton,
+                    state = NORMAL if isSimulationStarted else DISABLED)
+
+stopButton.grid(row=0, column=1, padx=(10, 10))
+
 exitButton = Button(navFrame,
                 text='Exit',
                 command=quit,
@@ -105,6 +157,25 @@ exitButton = Button(navFrame,
                 activeforeground='#ff5252',
                 activebackground='#3c3c3c',
                 padx=25)
-exitButton.grid(row=0, column=1, padx=(10, 0))
+exitButton.grid(row=0, column=2, padx=(10, 0))
+
+incTimeFrameButton = Button(navFrame,
+                text='>',
+                font=('Cascadia Code SemiLight', 18),
+                fg='#ffffff',
+                bg='#111111',
+                activeforeground='#ffffff',
+                activebackground='#3c3c3c',
+                padx=10,
+                command=incrementTimeFrame)
+incTimeFrameButton.grid(row=0, column=3, padx=(50, 10))
+
+
+timeFrameLabel = Label(navFrame, 
+              textvariable=timeFrameLabelVariable, 
+              font=('Cascadia Code Regular', 18),
+              fg='#ffffff', 
+              bg='#111111')
+timeFrameLabel.grid(row=0, column=4, padx=(10, 40))
 
 mainWindow.mainloop()
