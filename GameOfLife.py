@@ -1,8 +1,11 @@
 from tkinter import *
 from tkinter import colorchooser
 
+ROW = 25
+COL = 47
 
-stateArray = [[0] * 47 for _ in range(25)] # 2D Cell Array
+stateArray = [[0] * COL for _ in range(ROW)] # 2D Cell Array
+tempStateArray = [[0] * COL for _ in range(ROW)] # Temporary 2D Cell Array
 
 timeFrame = 0 # time frame; default = 0
 
@@ -11,9 +14,6 @@ shapes = [] # 2D Array for shape labels
 
 isSimulationStarted = False  # Status on whether the 2D CA Game of Life simulation has started or not
 
-
-ROW = 25
-COL = 47
 
 
 # Functions
@@ -33,9 +33,15 @@ def handleState(event):
         shape.configure(bg='#111111')
 
     print(f"Clicked shape at row={row}, column={col}. Value: " + str(stateArray[row][col]))
+    print("Number of live neighbors: " + str(countLiveNeighbors(row, col)))
 
 
 def updateSimulationScreen():
+    global stateArray
+    global tempStateArray
+
+    stateArray = tempStateArray
+    tempStateArray = [[0] * COL for _ in range(ROW)] 
     for row in range(ROW):
         for col in range(COL):
             if(stateArray[row][col] == 1):
@@ -43,33 +49,64 @@ def updateSimulationScreen():
             else:
                 shapes[row][col].configure(bg='#111111')
 
+    
+def countLiveNeighbors(row, col):
+    count = 0
 
-def isCellOnEdge(row, col):
-    if(row == 0 or row == ROW - 1 or col == 0 or col == COL - 1):
-        return True
-    else:
-        return False
+    for i in range(row - 1, row + 2):
+        for k in range(col - 1, col + 2):
+            if(i < 0 or k < 0 or i == ROW or k == COL or (i == row and k == col)):
+                pass
+            else:
+                if(stateArray[i][k] == 1):
+                    count = count + 1
+
+    return count
+
+def determineNextState(row, col):
+    if(stateArray[row][col] == 0 and countLiveNeighbors(row, col) == 3): # If cell is not alive and has exactly 3 neighbnors
+        tempStateArray[row][col] = 1
+    elif(stateArray[row][col] == 1 and (countLiveNeighbors(row, col) == 2 or countLiveNeighbors(row, col) == 3)): # If cell is alive and has 2 or 3 live neighbors
+        tempStateArray[row][col] = 1
+    elif(stateArray[row][col] == 1 and countLiveNeighbors(row, col) > 3): # If cell is alive and has more than 3 live neighbors
+        tempStateArray[row][col] = 0
+    elif(stateArray[row][col] == 1 and countLiveNeighbors(row, col) < 2): # If cell is alive and has less than 2 live neighbors
+        tempStateArray[row][col] = 0
 
 def incrementTimeFrame():
     global timeFrame
     timeFrame = timeFrame + 1
     timeFrameLabelVariable.set(timeFrame)
 
+    for row in range(ROW):
+        for col in range(COL):
+            determineNextState(row, col)
+    
+    updateSimulationScreen()
+
 
 def toggleStartButton():
     global isSimulationStarted
     isSimulationStarted = True
     startButton.config(state=DISABLED)
+    incTimeFrameButton.config(state=NORMAL)
     stopButton.config(state=NORMAL)
 
 def toggleStopButton():
     global isSimulationStarted
+    global timeFrame
     global stateArray
+    global tempStateArray
 
     stopButton.config(state=DISABLED)
+    incTimeFrameButton.config(state=DISABLED)
     startButton.config(state=NORMAL)
     stateArray = [[0] * 47 for _ in range(25)]
+    tempStateArray = [[0] * 47 for _ in range(25)]
+    timeFrame = 0
+    timeFrameLabelVariable.set(timeFrame)
     isSimulationStarted = False
+
     updateSimulationScreen()
 
 
@@ -172,7 +209,8 @@ incTimeFrameButton = Button(navFrame,
                 activeforeground='#ffffff',
                 activebackground='#3c3c3c',
                 padx=10,
-                command=incrementTimeFrame)
+                command=incrementTimeFrame,
+                state = NORMAL if isSimulationStarted else DISABLED)
 incTimeFrameButton.grid(row=0, column=3, padx=(50, 10))
 
 
@@ -183,4 +221,5 @@ timeFrameLabel = Label(navFrame,
               bg='#111111')
 timeFrameLabel.grid(row=0, column=4, padx=(10, 40))
 
-mainWindow.mainloop()
+mainWindow.mainloop(
+)
