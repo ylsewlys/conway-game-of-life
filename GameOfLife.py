@@ -147,7 +147,7 @@ for row in range(ROW):
     row_shapes = []
     for col in range(COL):
         if(stateArray[row][col] == 0):
-            shape = Label(screenFrame, bg='#111111', width=1, height=1, highlightthickness=1, highlightcolor='#ffffff', highlightbackground='#ffffff')
+            shape = Label(screenFrame, bg='#111111', width=1, height=1, highlightthickness=1, highlightcolor='#ffffff', highlightbackground='#ffffff', relief=SOLID)
         else:
             shape = Label(screenFrame, bg='#ffffff', width=1, height=1, highlightthickness=1, highlightcolor='#ffffff', highlightbackground='#ffffff', relief=SOLID)
 
