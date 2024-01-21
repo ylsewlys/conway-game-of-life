@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import colorchooser
 
 ROW = 25
 COL = 47
@@ -24,17 +23,15 @@ def handleState(event):
     info = shape.grid_info()
     row, col = info['row'], info['column']
     
-
-    if(stateArray[row][col] == 0):
-        stateArray[row][col] = 1
-        shape.configure(bg='#ffffff')
-    elif(stateArray[row][col] == 1):
-        stateArray[row][col] = 0
-        shape.configure(bg='#111111')
-
-    print(f"Clicked shape at row={row}, column={col}. Value: " + str(stateArray[row][col]))
-    print("Number of live neighbors: " + str(countLiveNeighbors(row, col)))
-
+    if(isSimulationStarted == False):
+        if(stateArray[row][col] == 0):
+            stateArray[row][col] = 1
+            shape.configure(bg='#ffffff')
+        elif(stateArray[row][col] == 1):
+            stateArray[row][col] = 0
+            shape.configure(bg='#111111')       
+    else:
+        pass
 
 def updateSimulationScreen():
     global stateArray
@@ -92,6 +89,7 @@ def toggleStartButton():
     incTimeFrameButton.config(state=NORMAL)
     stopButton.config(state=NORMAL)
 
+
 def toggleStopButton():
     global isSimulationStarted
     global timeFrame
@@ -140,7 +138,7 @@ titleLabel = Label(mainWindow,
               bg='#111111')
 titleLabel.pack()
 
-# Create Screen
+# Create Screen Frame for 2D Array
 screenFrame = Frame(mainWindow, height=575, width=705)
 screenFrame.grid_propagate(False)
 screenFrame.pack()
