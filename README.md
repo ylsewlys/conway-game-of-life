@@ -16,3 +16,5 @@ The implemented code represents John Conway's Game of Life cellular automata in 
 - Click the stop button to reset and restart the game.
 - Click exit to quit the program.
 
+## Possible TKinter GUI Elements Conflict with Different Operating Systems
+When the program runs on a different operating system, there is a possibility of TKinter GUI elements not showing up or working properly despite having no issues on another operating system such as Windows. For instance, the border of each cells in the array show up properly on Windows; however, they don't show up at all on Mac. The visuals and positioning of the buttons may also differ, which may lead to inconsistent misclicks. Since this program was made on a Windows x64 operating system, I did not have the chance to fix the issues of the GUI elements on another operating system since I only have a Windows device available for use.

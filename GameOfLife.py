@@ -26,10 +26,10 @@ def handleState(event):
     if(isSimulationStarted == False):
         if(stateArray[row][col] == 0):
             stateArray[row][col] = 1
-            shape.configure(bg='#ffffff')
+            shape.configure(bg='#55e2e9')
         elif(stateArray[row][col] == 1):
             stateArray[row][col] = 0
-            shape.configure(bg='#111111')       
+            shape.configure(bg='#fde4f2')       
     else:
         pass
 
@@ -42,9 +42,9 @@ def updateSimulationScreen():
     for row in range(ROW):
         for col in range(COL):
             if(stateArray[row][col] == 1):
-                shapes[row][col].configure(bg='#ffffff')
+                shapes[row][col].configure(bg='#55e2e9')
             else:
-                shapes[row][col].configure(bg='#111111')
+                shapes[row][col].configure(bg='#fde4f2')
 
     
 def countLiveNeighbors(row, col):
@@ -147,9 +147,9 @@ for row in range(ROW):
     row_shapes = []
     for col in range(COL):
         if(stateArray[row][col] == 0):
-            shape = Label(screenFrame, bg='#111111', width=1, height=1, highlightthickness=1, highlightcolor='#ffffff', highlightbackground='#ffffff')
+            shape = Label(screenFrame, bg='#fde4f2', width=1, height=1, highlightthickness=1)
         else:
-            shape = Label(screenFrame, bg='#ffffff', width=1, height=1, highlightthickness=1, highlightcolor='#ffffff', highlightbackground='#ffffff')
+            shape = Label(screenFrame, bg='#55e2e9', width=1, height=1, highlightthickness=1)
 
         shape.bind("<Button-1>", handleState)
         shape.grid(row=row, column=col)
